@@ -1,6 +1,6 @@
 = eventmachine-distributed-notification
 
-An {EventMachine}[http://wiki.github.com/eventmachine/eventmachine/] extension to watch OSX's Distributed Notification.
+An {EventMachine}[http://wiki.github.com/eventmachine/eventmachine/] extension to watch OSX's Distributed Notification
 
 == Synopsis
 
