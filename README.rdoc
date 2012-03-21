@@ -1,6 +1,24 @@
 = eventmachine-distributed-notification
 
-Description goes here.
+An [EventMachine](http://wiki.github.com/eventmachine/eventmachine/) extensions to watch OSX's Distributed Notification.
+
+== Synopsis
+
+ require 'eventmachine-distributed-notification'
+
+=== Watch Notification
+
+ class Watcher < EM::DistributedNotificationWatch
+   attr_accessor :value
+
+   def notify(name, user_info)
+     puts 'now playing %s' % [user_info['Artist'], user_info['Name']].joint(' - ')
+   end
+ end
+
+ EM.run {
+   EM.watch_distributed_notification('com.apple.iTunes.playerInfo', Watcher)
+ }
 
 == Contributing to eventmachine-distributed-notification
  

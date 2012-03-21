@@ -19,4 +19,12 @@ module EventMachine
       @timer.cancel if @timer
     end
   end
+
+  def self.watch_distributed_notification(name, handler = nil, *args, &block)
+    args = [name, *args]
+    klass = klass_from_handler(EventMachine::DistributedNotificationWatch, handler, *args);
+    c = klass.new(*args, &block)
+    c.start
+    c
+  end
 end

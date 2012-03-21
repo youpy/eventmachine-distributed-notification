@@ -19,19 +19,41 @@ describe EventMachine::DistributedNotificationWatch do
   itunes.run
   itunes.stop
 
-  it 'should observe distributed notifications' do
-    watcher = Watcher.new(nil)
-    EM.run {
-      watcher.start
+  context 'instantiate' do
+    it 'should observe distributed notifications' do
+      watcher = Watcher.new(nil)
 
-      itunes.playlists["Music"].tracks[1].play
+      EM.run {
+        watcher.start
 
-      EM::add_timer(1) {
-        itunes.stop
-        EM.stop
+        itunes.playlists["Music"].tracks[1].play
+
+        EM::add_timer(1) {
+          itunes.stop
+          EM.stop
+        }
       }
-    }
 
-    watcher.value.should eql('com.apple.iTunes.playerInfo')
+      watcher.value.should_not be_nil
+    end
+  end
+
+  context 'invoked from EM.watch_distributed_notification' do
+    it 'should observe distributed notifications from ' do
+      watcher = nil
+
+      EM.run {
+        watcher = EM.watch_distributed_notification(nil, Watcher)
+
+        itunes.playlists["Music"].tracks[1].play
+
+        EM::add_timer(1) {
+          itunes.stop
+          EM.stop
+        }
+      }
+
+      watcher.value.should_not be_nil
+    end
   end
 end
