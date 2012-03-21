@@ -12,17 +12,35 @@ end
 require 'rake'
 
 require 'jeweler'
-Jeweler::Tasks.new do |gem|
+tasks = Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "eventmachine-distributed-notification"
-  gem.homepage = "http://github.com/youpy/eventmachine-distributed-notification"
+  gem.name = "eventmachine-distributed-notification-watch"
+  gem.homepage = "http://github.com/youpy/eventmachine-distributed-notification-watch"
   gem.license = "MIT"
   gem.summary = %Q{TODO: one-line summary of your gem}
   gem.description = %Q{TODO: longer description of your gem}
   gem.email = "youpy@buycheapviagraonlinenow.com"
   gem.authors = ["youpy"]
-  # dependencies defined in Gemfile
+  gem.extensions = FileList["ext/**/extconf.rb"]
 end
+
+# rule to build the extension: this says
+# that the extension should be rebuilt
+# after any change to the files in ext
+ext_name = 'observer_native'
+file "lib/#{ext_name}.bundle" =>
+  Dir.glob("ext/#{ext_name}/*{.rb,.m}") do
+  Dir.chdir("ext/#{ext_name}") do
+    # this does essentially the same thing
+    # as what RubyGems does
+    ruby "extconf.rb"
+    sh "make"
+  end
+  cp "ext/#{ext_name}/#{ext_name}.bundle", "lib/"
+end
+
+task :spec => "lib/#{ext_name}.bundle"
+
 Jeweler::RubygemsDotOrgTasks.new
 
 require 'rspec/core'
@@ -31,19 +49,4 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = FileList['spec/**/*_spec.rb']
 end
 
-RSpec::Core::RakeTask.new(:rcov) do |spec|
-  spec.pattern = 'spec/**/*_spec.rb'
-  spec.rcov = true
-end
-
 task :default => :spec
-
-require 'rdoc/task'
-Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
-
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "eventmachine-distributed-notification #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end

@@ -47,3 +47,10 @@ pkg
 
 # For rubinius:
 #*.rbc
+
+# ext
+*.bundle
+*.log
+*.o
+Makefile
+
