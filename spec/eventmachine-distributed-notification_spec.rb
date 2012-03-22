@@ -10,7 +10,23 @@ class Watcher < EM::DistributedNotificationWatch
 
   def notify(name, user_info)
     @value = name
-    p user_info
+  end
+end
+
+describe EventMachine::DistributedNotification::Poster do
+  it 'should post distributed notifications' do
+    watcher = Watcher.new('xxx')
+
+    EM.run {
+      watcher.start
+
+      EM::add_timer(1) {
+        EM::post_distributed_notification('xxx', 'yyy')
+        EM.stop
+      }
+    }
+
+    watcher.value.should_not be_nil
   end
 end
 

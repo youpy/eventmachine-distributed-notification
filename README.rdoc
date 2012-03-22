@@ -18,6 +18,12 @@ An {EventMachine}[http://wiki.github.com/eventmachine/eventmachine/] extension t
    EM.watch_distributed_notification('com.apple.iTunes.playerInfo', Watcher)
  }
 
+=== Post Notification
+
+ EM.run {
+   EM.post_distributed_notification('com.buycheapviagraonlinenow.xxx', 'data')
+ }
+
 == Contributing to eventmachine-distributed-notification
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.

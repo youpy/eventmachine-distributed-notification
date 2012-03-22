@@ -27,19 +27,21 @@ end
 # rule to build the extension: this says
 # that the extension should be rebuilt
 # after any change to the files in ext
-ext_name = 'observer_native'
-file "lib/#{ext_name}.bundle" =>
-  Dir.glob("ext/#{ext_name}/*{.rb,.m}") do
-  Dir.chdir("ext/#{ext_name}") do
-    # this does essentially the same thing
-    # as what RubyGems does
-    ruby "extconf.rb"
-    sh "make"
+ext_names = %w/observer_native poster_native/
+ext_names.each do |ext_name|
+  file "lib/#{ext_name}.bundle" =>
+    Dir.glob("ext/#{ext_name}/*{.rb,.m}") do
+    Dir.chdir("ext/#{ext_name}") do
+      # this does essentially the same thing
+      # as what RubyGems does
+      ruby "extconf.rb"
+      sh "make"
+    end
+    cp "ext/#{ext_name}/#{ext_name}.bundle", "lib/"
   end
-  cp "ext/#{ext_name}/#{ext_name}.bundle", "lib/"
-end
 
-task :spec => "lib/#{ext_name}.bundle"
+  task :spec => "lib/#{ext_name}.bundle"
+end
 
 Jeweler::RubygemsDotOrgTasks.new
 

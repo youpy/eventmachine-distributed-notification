@@ -1,7 +1,20 @@
 require 'eventmachine'
 require 'observer_native'
+require 'poster_native'
 
 module EventMachine
+  module DistributedNotification
+    class Poster
+      def initialize
+        @poster = PosterNative.new
+      end
+
+      def post(name, data)
+        @poster.post(name, data)
+      end
+    end
+  end
+
   class DistributedNotificationWatch
     def initialize(name)
       @observer = DistributedNotification::ObserverNative.new(name, self)
@@ -27,5 +40,9 @@ module EventMachine
     c = klass.new(*args, &block)
     c.start
     c
+  end
+
+  def self.post_distributed_notification(name, data)
+    DistributedNotification::Poster.new.post(name, data)
   end
 end
