@@ -39,7 +39,7 @@ static VALUE cPosterNative_post(int argc, VALUE *argv, VALUE self)
                 userInfo:userInfo
       deliverImmediately:YES];
 
-  [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+  [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
 
   return Qnil;
 }
