@@ -1,3 +1,4 @@
+require 'eventmachine'
 require 'observer_native'
 
 module EventMachine
