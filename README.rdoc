@@ -9,8 +9,6 @@ An {EventMachine}[http://wiki.github.com/eventmachine/eventmachine/] extension t
 === Watch Notification
 
  class Watcher < EM::DistributedNotificationWatch
-   attr_accessor :value
-
    def notify(name, user_info)
      puts 'now playing %s' % [user_info['Artist'], user_info['Name']].join(' - ')
    end
