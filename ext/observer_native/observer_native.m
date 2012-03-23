@@ -1,7 +1,7 @@
 #import "observer_native.h"
 
 @interface Observer (Private)
-- (void) p_iTunesPlayStatusChanged:(NSNotification *)theNotification;
+- (void) notify:(NSNotification *)theNotification;
 @end
 
 @implementation Observer
@@ -12,6 +12,7 @@
 - (void)dealloc
 {
   [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
+  [name release];
   [super dealloc];
 }
 
@@ -19,13 +20,13 @@
 {
   [[NSDistributedNotificationCenter defaultCenter]
             addObserver:self
-               selector:@selector(p_iTunesPlayStatusChanged:)
+               selector:@selector(notify:)
                    name:(name != nil) ? name : nil
                  object:nil
    ];
 }
 
-- (void)p_iTunesPlayStatusChanged:(NSNotification *)theNotification
+- (void)notify:(NSNotification *)theNotification
 {
   VALUE aName = rb_str_new2([[theNotification name] UTF8String]);
   NSDictionary *userInfo = [theNotification userInfo];
@@ -34,8 +35,6 @@
   for(id key in userInfo) {
     rb_hash_aset(hash, rb_str_new2([[key description] UTF8String]), rb_str_new2([[[userInfo objectForKey:key] description] UTF8String]));
   }
-
-  //const char *description = [[[theNotification userInfo] description] UTF8String];
 
   rb_funcall(handler, rb_intern("notify"), 2, aName, hash);
 }
@@ -57,6 +56,10 @@ Observer *getObserver(VALUE obj) {
 }
 
 void cObserverNative_free(void *ptr) {
+  Observer *obs = (Observer *)(((struct ObserverObject *)ptr)->obs);
+
+  [obs release];
+
   free(ptr);
 }
 
@@ -82,26 +85,16 @@ static VALUE cObserverNative_new(int argc, VALUE *argv, VALUE klass)
   obj = createInstanceFromObserver(obs);
 
   if(RTEST(name)) {
-    [obs setName:[NSString stringWithUTF8String:StringValuePtr(name)]];
+    [obs setName:[[NSString stringWithUTF8String:StringValuePtr(name)] retain]];
   }
 
   [obs setHandler:handler];
   [obs observe];
 
+  [pool release];
+
   return obj;
 }
-
-// static VALUE cObserverNative_notify(int argc, VALUE *argv, VALUE self)
-// {
-//   VALUE name, hash;
-
-//   rb_scan_args(argc, argv, "2", &name, &hash);
-
-//   rb_p(name);
-//   rb_p(hash);
-
-//   return Qnil;
-// }
 
 static VALUE cObserverNative_run(int argc, VALUE *argv, VALUE self)
 {
@@ -124,7 +117,6 @@ void Init_observer_native(void){
   rb_mDistributedNotification = rb_define_module_under(rb_mEventMachine, "DistributedNotification");
   rb_cObserverNative = rb_define_class_under(rb_mDistributedNotification, "ObserverNative", rb_cObject);
   rb_define_singleton_method(rb_cObserverNative, "new", cObserverNative_new, -1);
-  //rb_define_method(rb_cObserverNative, "notify", cObserverNative_notify, -1);
   rb_define_method(rb_cObserverNative, "run", cObserverNative_run, -1);
   rb_define_method(rb_cObserverNative, "run_forever", cObserverNative_run_forever, -1);
 }

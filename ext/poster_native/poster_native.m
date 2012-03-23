@@ -19,8 +19,6 @@ VALUE createInstance() {
 
 static VALUE cPosterNative_new(int argc, VALUE *argv, VALUE klass)
 {
-  NSAutoreleasePool *pool = [NSAutoreleasePool new];
-
   return createInstance();
 }
 
