@@ -26,6 +26,7 @@ static VALUE cPosterNative_post(int argc, VALUE *argv, VALUE self)
 {
   VALUE name, data;
   NSDictionary *userInfo;
+  NSAutoreleasePool *pool = [NSAutoreleasePool new];
 
   rb_scan_args(argc, argv, "2", &name, &data);
 
@@ -38,6 +39,8 @@ static VALUE cPosterNative_post(int argc, VALUE *argv, VALUE self)
       deliverImmediately:YES];
 
   [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+
+  [pool release];
 
   return Qnil;
 }
