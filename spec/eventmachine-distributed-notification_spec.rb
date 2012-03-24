@@ -6,10 +6,11 @@ require 'eventmachine'
 require 'appscript'
 
 class Watcher < EM::DistributedNotificationWatch
-  attr_accessor :value
+  attr_accessor :value, :user_info
 
   def notify(name, user_info)
     @value = name
+    @user_info = user_info
   end
 end
 
@@ -51,6 +52,7 @@ describe EventMachine::DistributedNotificationWatch do
       }
 
       watcher.value.should_not be_nil
+      watcher.user_info['Total Time'].should be_kind_of(Fixnum)
     end
   end
 

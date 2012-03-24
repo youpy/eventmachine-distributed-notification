@@ -13,3 +13,4 @@
 @end
 
 VALUE createInstanceFromObserver(Observer *obs);
+VALUE getRubyValueFromId(id thing);

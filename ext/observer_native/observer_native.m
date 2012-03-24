@@ -33,7 +33,9 @@
   VALUE hash = rb_hash_new();
 
   for(id key in userInfo) {
-    rb_hash_aset(hash, rb_str_new2([[key description] UTF8String]), rb_str_new2([[[userInfo objectForKey:key] description] UTF8String]));
+    rb_hash_aset(hash,
+                 rb_str_new2([[key description] UTF8String]),
+                 getRubyValueFromId([userInfo objectForKey:key]));
   }
 
   rb_funcall(handler, rb_intern("notify"), 2, aName, hash);
@@ -61,6 +63,33 @@ void cObserverNative_free(void *ptr) {
   [obs release];
 
   free(ptr);
+}
+
+VALUE getRubyValueFromId(id thing) {
+  VALUE result;
+
+  if([thing isKindOfClass:[NSNumber class]]) {
+    if(strcmp([thing objCType], @encode(BOOL)) == 0)
+      result = thing ? Qtrue : Qfalse;
+    else if(strcmp([thing objCType], @encode(int)) == 0)
+      result = INT2NUM([thing intValue]);
+    else if(strcmp([thing objCType], @encode(unsigned int)) == 0)
+      result = INT2NUM([thing unsignedIntValue]);
+    else if(strcmp([thing objCType], @encode(long)) == 0)
+      result = INT2NUM([thing longValue]);
+    else if(strcmp([thing objCType], @encode(float)) == 0)
+      result = rb_float_new([thing floatValue]);
+    else if(strcmp([thing objCType], @encode(double)) == 0)
+      result = rb_float_new([thing doubleValue]);
+    else
+      result = INT2NUM([thing longLongValue]);
+  } else if([thing isKindOfClass:[NSNumber class]]) {
+    result = rb_str_new2([thing UTF8String]);
+  } else {
+    result = rb_str_new2([[thing description] UTF8String]);
+  }
+
+  return result;
 }
 
 VALUE createInstanceFromObserver(Observer *obs) {
