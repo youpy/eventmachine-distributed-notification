@@ -24,12 +24,14 @@ module EventMachine
     end
 
     def start
+      @observer.observe
       @timer = EventMachine::add_periodic_timer(1) do
         @observer.run
       end
     end
 
     def stop
+      @observer.unobserve
       @timer.cancel if @timer
     end
   end

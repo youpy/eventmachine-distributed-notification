@@ -24,6 +24,7 @@ describe EventMachine::DistributedNotification::Poster do
       EM::add_timer(1) {
         EM::post_distributed_notification('xxx', 'yyy')
         EM.stop
+        watcher.stop
       }
     }
 
@@ -37,8 +38,8 @@ describe EventMachine::DistributedNotificationWatch do
   itunes.stop
 
   context 'instantiate' do
-    it 'should observe distributed notifications' do
-      watcher = Watcher.new(nil)
+    it 'should watch distributed notifications' do
+      watcher = Watcher.new('com.apple.iTunes.playerInfo')
 
       EM.run {
         watcher.start
@@ -48,6 +49,7 @@ describe EventMachine::DistributedNotificationWatch do
         EM::add_timer(1) {
           itunes.stop
           EM.stop
+          watcher.stop
         }
       }
 
@@ -57,21 +59,24 @@ describe EventMachine::DistributedNotificationWatch do
   end
 
   context 'invoked from EM.watch_distributed_notification' do
-    it 'should observe distributed notifications from ' do
-      watcher = nil
+    context 'with class' do
+      it 'should watch distributed notifications' do
+        watcher = nil
 
-      EM.run {
-        watcher = EM.watch_distributed_notification(nil, Watcher)
+        EM.run {
+          watcher = EM.watch_distributed_notification(nil, Watcher)
 
-        itunes.playlists["Music"].tracks[1].play
+          itunes.playlists["Music"].tracks[1].play
 
-        EM::add_timer(1) {
-          itunes.stop
-          EM.stop
+          EM::add_timer(1) {
+            itunes.stop
+            EM.stop
+            watcher.stop
+          }
         }
-      }
 
-      watcher.value.should_not be_nil
+        watcher.value.should_not be_nil
+      end
     end
   end
 end

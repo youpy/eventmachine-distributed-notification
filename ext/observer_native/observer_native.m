@@ -11,7 +11,7 @@
 
 - (void)dealloc
 {
-  [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
+  [self unobserve];
   [name release];
   [super dealloc];
 }
@@ -24,6 +24,11 @@
                    name:(name != nil) ? name : nil
                  object:nil
    ];
+}
+
+- (void)unobserve
+{
+  [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)notify:(NSNotification *)theNotification
@@ -118,7 +123,6 @@ static VALUE cObserverNative_new(int argc, VALUE *argv, VALUE klass)
   }
 
   [obs setHandler:handler];
-  [obs observe];
 
   [pool release];
 
@@ -139,6 +143,24 @@ static VALUE cObserverNative_run_forever(int argc, VALUE *argv, VALUE self)
   return Qnil;
 }
 
+static VALUE cObserverNative_observe(int argc, VALUE *argv, VALUE self)
+{
+  Observer *obs = getObserver(self);
+
+  [obs observe];
+
+  return Qnil;
+}
+
+static VALUE cObserverNative_unobserve(int argc, VALUE *argv, VALUE self)
+{
+  Observer *obs = getObserver(self);
+
+  [obs unobserve];
+
+  return Qnil;
+}
+
 void Init_observer_native(void){
   VALUE rb_mEventMachine, rb_mDistributedNotification;
 
@@ -148,4 +170,6 @@ void Init_observer_native(void){
   rb_define_singleton_method(rb_cObserverNative, "new", cObserverNative_new, -1);
   rb_define_method(rb_cObserverNative, "run", cObserverNative_run, -1);
   rb_define_method(rb_cObserverNative, "run_forever", cObserverNative_run_forever, -1);
+  rb_define_method(rb_cObserverNative, "observe", cObserverNative_observe, -1);
+  rb_define_method(rb_cObserverNative, "unobserve", cObserverNative_unobserve, -1);
 }

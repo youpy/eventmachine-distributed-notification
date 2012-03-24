@@ -9,6 +9,7 @@
 @property (assign) VALUE handler;
 
 -(void)observe;
+-(void)unobserve;
 
 @end
 
