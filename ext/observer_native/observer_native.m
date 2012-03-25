@@ -88,7 +88,7 @@ VALUE getRubyValueFromId(id thing) {
       result = rb_float_new([thing doubleValue]);
     else
       result = INT2NUM([thing longLongValue]);
-  } else if([thing isKindOfClass:[NSNumber class]]) {
+  } else if([thing isKindOfClass:[NSString class]]) {
     result = rb_str_new2([thing UTF8String]);
   } else {
     result = rb_str_new2([[thing description] UTF8String]);
