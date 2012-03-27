@@ -78,5 +78,30 @@ describe EventMachine::DistributedNotificationWatch do
         watcher.value.should_not be_nil
       end
     end
+
+    context 'with block' do
+      it 'should watch distributed notifications' do
+        value = nil
+
+        EM.run {
+          watcher = EM.watch_distributed_notification(nil) do |c|
+            (class << c; self; end).send(:define_method, :notify) do |name, info|
+              value = info
+            end
+          end
+
+          itunes.playlists["Music"].tracks[1].play
+
+          EM::add_timer(1) {
+            itunes.stop
+            EM.stop
+            watcher.stop
+          }
+        }
+
+        value.should_not be_nil
+        value['Total Time'].should be_kind_of(Fixnum)
+      end
+    end
   end
 end

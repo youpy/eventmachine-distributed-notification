@@ -40,6 +40,7 @@ module EventMachine
     args = [name, *args]
     klass = klass_from_handler(EventMachine::DistributedNotificationWatch, handler, *args);
     c = klass.new(*args, &block)
+    block_given? and yield c
     c.start
     c
   end
