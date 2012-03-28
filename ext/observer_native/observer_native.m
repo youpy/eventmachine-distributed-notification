@@ -131,7 +131,7 @@ static VALUE cObserverNative_new(int argc, VALUE *argv, VALUE klass)
 
 static VALUE cObserverNative_run(int argc, VALUE *argv, VALUE self)
 {
-  [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+  [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0]];
 
   return Qnil;
 }
