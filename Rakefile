@@ -29,6 +29,11 @@ end
 # after any change to the files in ext
 ext_names = %w/observer_native poster_native/
 ext_names.each do |ext_name|
+  CLEAN.include Dir.glob("ext/#{ext_name}/*{.o,.log}")
+  CLEAN.include "ext/#{ext_name}/Makefile"
+  CLOBBER.include "ext/#{ext_name}/#{ext_name}.bundle"
+  CLOBBER.include "lib/#{ext_name}.bundle"
+
   file "lib/#{ext_name}.bundle" =>
     Dir.glob("ext/#{ext_name}/*{.rb,.m}") do
     Dir.chdir("ext/#{ext_name}") do
