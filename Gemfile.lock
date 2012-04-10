@@ -1,3 +1,9 @@
+PATH
+  remote: .
+  specs:
+    eventmachine-distributed-notification (0.1.4)
+      eventmachine
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -28,7 +34,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.1.0)
-  eventmachine
+  eventmachine-distributed-notification!
   jeweler (~> 1.8.3)
   rb-appscript
   rdoc (~> 3.12)
