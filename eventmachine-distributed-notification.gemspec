@@ -54,14 +54,14 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_development_dependency(%q<bundler>, ["~> 1.1.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.8.3"])
-      s.add_development_dependency(%q<rb-appscript>, [">= 0"])
+      s.add_development_dependency(%q<itunes-client>, [">= 0"])
     else
       s.add_dependency(%q<eventmachine>, [">= 0"])
       s.add_dependency(%q<rspec>, ["~> 2.8.0"])
       s.add_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_dependency(%q<bundler>, ["~> 1.1.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
-      s.add_dependency(%q<rb-appscript>, [">= 0"])
+      s.add_dependency(%q<itunes-client>, [">= 0"])
     end
   else
     s.add_dependency(%q<eventmachine>, [">= 0"])
@@ -69,7 +69,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
     s.add_dependency(%q<bundler>, ["~> 1.1.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
-    s.add_dependency(%q<rb-appscript>, [">= 0"])
+    s.add_dependency(%q<itunes-client>, [">= 0"])
   end
 end
 

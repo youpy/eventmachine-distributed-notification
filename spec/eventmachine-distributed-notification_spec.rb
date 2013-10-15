@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 require 'rubygems'
 require 'spec_helper'
 require 'eventmachine'
-require 'appscript'
+require 'itunes-client'
 
 class Watcher < EM::DistributedNotificationWatch
   attr_accessor :value, :user_info
@@ -33,28 +33,41 @@ describe EventMachine::DistributedNotification::Poster do
 end
 
 describe EventMachine::DistributedNotificationWatch do
-  itunes = Appscript.app('iTunes')
-  itunes.run
-  itunes.stop
+  Itunes::Player.play
+  Itunes::Player.stop
 
   context 'instantiate' do
-    it 'should watch distributed notifications' do
-      watcher = Watcher.new('com.apple.iTunes.playerInfo')
+    shared_examples_for 'watch distributed notifications' do
+      it 'should watch distributed notifications' do
+        watcher = Watcher.new(name)
 
-      EM.run {
-        watcher.start
+        EM.run {
+          watcher.start
 
-        itunes.playlists["Music"].tracks[1].play
+          Itunes::Player.play
 
-        EM::add_timer(1) {
-          itunes.stop
-          EM.stop
-          watcher.stop
+          EM::add_timer(1) {
+            Itunes::Player.stop
+            EM.stop
+            watcher.stop
+          }
         }
-      }
 
-      watcher.value.should_not be_nil
-      watcher.user_info['Total Time'].should be_kind_of(Fixnum)
+        watcher.value.should_not be_nil
+        watcher.user_info['Total Time'].should be_kind_of(Fixnum)
+      end
+    end
+
+    context 'name is passed as a string' do
+      let(:name) { 'com.apple.iTunes.playerInfo' }
+
+      it_should_behave_like 'watch distributed notifications'
+    end
+
+    context 'name is passed as an array of strings' do
+      let(:name) { ['xxx', 'com.apple.iTunes.playerInfo'] }
+
+      it_should_behave_like 'watch distributed notifications'
     end
   end
 
@@ -66,10 +79,10 @@ describe EventMachine::DistributedNotificationWatch do
         EM.run {
           watcher = EM.watch_distributed_notification(nil, Watcher)
 
-          itunes.playlists["Music"].tracks[1].play
+          Itunes::Player.play
 
           EM::add_timer(1) {
-            itunes.stop
+            Itunes::Player.stop
             EM.stop
             watcher.stop
           }
@@ -90,10 +103,10 @@ describe EventMachine::DistributedNotificationWatch do
             end
           end
 
-          itunes.playlists["Music"].tracks[1].play
+          Itunes::Player.play
 
           EM::add_timer(1) {
-            itunes.stop
+            Itunes::Player.stop
             EM.stop
             watcher.stop
           }

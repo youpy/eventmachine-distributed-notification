@@ -16,22 +16,25 @@ module EventMachine
   end
 
   class DistributedNotificationWatch
-    def initialize(name)
-      @observer = DistributedNotification::ObserverNative.new(name, self)
+    def initialize(names)
+      names = names.kind_of?(Array) ? names : [names]
+      @observers = names.map do |name|
+        DistributedNotification::ObserverNative.new(name, self)
+      end
     end
 
     def notify(name, user_info)
     end
 
     def start
-      @observer.observe
+      @observers.map(&:observe)
       @timer = EventMachine::add_periodic_timer(1) do
-        @observer.run
+        @observers.map(&:run)
       end
     end
 
     def stop
-      @observer.unobserve
+      @observers.map(&:unobserve)
       @timer.cancel if @timer
     end
   end
