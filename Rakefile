@@ -1,28 +1,7 @@
-# encoding: utf-8
-
-require 'rubygems'
-require 'bundler'
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
+#!/usr/bin/env rake
 require 'rake'
-
-require 'jeweler'
-tasks = Jeweler::Tasks.new do |gem|
-  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "eventmachine-distributed-notification"
-  gem.homepage = "http://github.com/youpy/eventmachine-distributed-notification"
-  gem.license = "MIT"
-  gem.summary = %Q{An EventMachine extension to watch OSX's Distributed Notification}
-  gem.description = %Q{An EventMachine extension to watch OSX's Distributed Notification, posted by iTunes etc.}
-  gem.email = "youpy@buycheapviagraonlinenow.com"
-  gem.authors = ["youpy"]
-  gem.extensions = FileList["ext/**/extconf.rb"]
-end
+require 'rake/clean'
+require "bundler/gem_tasks"
 
 # rule to build the extension: this says
 # that the extension should be rebuilt
@@ -47,8 +26,6 @@ ext_names.each do |ext_name|
 
   task :spec => "lib/#{ext_name}.bundle"
 end
-
-Jeweler::RubygemsDotOrgTasks.new
 
 require 'rspec/core'
 require 'rspec/core/rake_task'
