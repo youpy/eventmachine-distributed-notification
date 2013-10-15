@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.name          = "eventmachine-distributed-notification"
   gem.require_paths = ["lib"]
-  gem.version       = "0.1.4"
+  gem.version       = "0.1.5"
   gem.licenses      = ["MIT"]
 
   gem.add_dependency('eventmachine')
