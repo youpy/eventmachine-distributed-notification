@@ -54,3 +54,4 @@ pkg
 *.o
 Makefile
 
+Gemfile.lock
