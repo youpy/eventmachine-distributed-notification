@@ -2,6 +2,8 @@ require 'eventmachine'
 require 'observer_native'
 require 'poster_native'
 
+require 'eventmachine-distributed-notification/version'
+
 module EventMachine
   module DistributedNotification
     class Poster

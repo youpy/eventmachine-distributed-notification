@@ -1,4 +1,6 @@
 # -*- encoding: utf-8 -*-
+require File.expand_path('../lib/eventmachine-distributed-notification/version', __FILE__)
+
 Gem::Specification.new do |gem|
   gem.authors       = ["youpy"]
   gem.email         = ["youpy@buycheapviagraonlinenow.com"]
@@ -12,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.name          = "eventmachine-distributed-notification"
   gem.require_paths = ["lib"]
-  gem.version       = "0.1.5"
+  gem.version       = EventMachine::DistributedNotification::VERSION
   gem.licenses      = ["MIT"]
 
   gem.add_dependency('eventmachine')
