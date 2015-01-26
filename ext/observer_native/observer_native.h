@@ -3,6 +3,8 @@
 
 @interface Observer : NSObject
 {
+  NSString *name;
+  VALUE handler;
 }
 
 @property (assign) NSString *name;
